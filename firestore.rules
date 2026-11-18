@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function allowedDomain() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.matches('^[^@]+@hbplus\\.fit$');
+    }
+    match /users/{uid} {
+      allow read: if allowedDomain() && request.auth.uid == uid;
+      // Users can create their own profile, but cannot choose or change their role.
+      allow create: if allowedDomain() && request.auth.uid == uid
+        && request.resource.data.role == 'user'
+        && request.resource.data.email == request.auth.token.email;
+      allow update: if allowedDomain() && request.auth.uid == uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'uid', 'email', 'createdAt']);
+      allow delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

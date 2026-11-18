@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "HBPlus Portal",
+    "slug": "hbplus-auth-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "hbplusportal",
+    "ios": { "supportsTablet": true, "bundleIdentifier": "fit.hbplus.portal" },
+    "android": { "package": "fit.hbplus.portal" },
+    "web": { "bundler": "metro" },
+    "plugins": ["expo-web-browser"]
+  }
+}
